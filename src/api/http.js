@@ -1,5 +1,6 @@
 import _ from '../assets/utils'
 import qs from 'qs';
+import { Toast } from 'antd-mobile';
 
 const http = function http(config) {
     // 初始化配置项以及校验
@@ -75,7 +76,10 @@ const http = function http(config) {
             })
         })
         .catch(reason => {
-            console.log('网络繁忙，请你稍后再试~');
+            Toast.show({
+                icon:'fail',
+                content:'网络繁忙，请稍后再试！'
+            })
             return Promise.reject(reason)
         })
 
