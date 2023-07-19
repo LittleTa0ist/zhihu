@@ -9,7 +9,7 @@ const routes = [{
         title: '知乎日报-WebApp'
     }
 }, {
-    path: '/datail/:id',
+    path: '/detail/:id',
     name: 'detail',
     component: lazy(() => import('../views/Detail')),
     meta: {
