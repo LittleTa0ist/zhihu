@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { NavBar } from 'antd-mobile';
+import './NavBarAgain.less'
 const NavBarAgain = (props) => {
     let { title } = props
     const handleBack = () => {

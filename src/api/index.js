@@ -4,7 +4,7 @@ const queryNewsLatest = () => http.get('/api/news_latest');
 
 // 获取往日信息
 const queryNewsBefore = (time) => {
-    http.get('/api/news_before', {
+    return http.get('/api/news_before', {
         params: {
             time
         }
@@ -13,7 +13,7 @@ const queryNewsBefore = (time) => {
 
 // 获取新闻详细信息
 const queryNewsInfo = (id) => {
-    http.get('/api/news_info', {
+    return http.get('/api/news_info', {
         params: {
             id
         }
@@ -22,7 +22,7 @@ const queryNewsInfo = (id) => {
 
 // 获取新闻点赞信息
 const queryStoryExtra = (id) => {
-    http.get('/api/story_extra', {
+    return http.get('/api/story_extra', {
         params: {
             id
         }
