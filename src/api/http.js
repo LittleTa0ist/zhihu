@@ -32,9 +32,17 @@ const http = function http(config) {
         headers['Content-Type'] = 'application/x-www-form-urlencoded'
     }
 
+    // 处理token
     // 类似于axios中的请求拦截器：每一个请求，送给服务器相同的内容可以在这里处理
-    let token = localStorage.getItem('tk')
-    if (token) headers['authorization'] = token
+    let token = _.storage.get('tk'),
+        safeList = ['/user_info', '/user_update', '/store', '/store_remove', '/store_list'];
+
+    if (token) {
+        let reg = /\/api(\/[^?#]+)/,
+            [, $1] = reg.exec(url) || []
+        let isSafe = safeList.some(item => item === $1)
+        if (isSafe) headers['authorization'] = token
+    }
 
 
     // 发送请求
@@ -77,8 +85,8 @@ const http = function http(config) {
         })
         .catch(reason => {
             Toast.show({
-                icon:'fail',
-                content:'网络繁忙，请稍后再试！'
+                icon: 'fail',
+                content: '网络繁忙，请稍后再试！'
             })
             return Promise.reject(reason)
         })

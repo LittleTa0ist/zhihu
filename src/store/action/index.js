@@ -1,5 +1,5 @@
 import baseAction from './base'
-import storeAction from './action'
+import storeAction from './store'
 
 const action = {
     base: baseAction,

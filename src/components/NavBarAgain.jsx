@@ -7,11 +7,12 @@ const NavBarAgain = (props) => {
     let { title } = props
     const navigate = useNavigate(),
         location = useLocation(),
-        [usp] = useSearchParams
+        [usp] = useSearchParams();
     const handleBack = () => {
         let to = usp.get('to')
         if (location.pathname === '/login' && /^\/detail\/\d+$/.test(to)) {
             navigate(to, { replace: true })
+            return;
         }
         navigate(-1)
     }

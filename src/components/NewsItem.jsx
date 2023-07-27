@@ -4,9 +4,10 @@ import { Image } from 'antd-mobile'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 export default function NewsItem(props) {
-    let { info, info: { images, title, hint, id } } = props
+    let { info, info: { images, title, hint, id, image } } = props
+    if (!images) images = [image]
     if (!info) return null
-    if(!Array.isArray(images)) images=['']
+    if (!Array.isArray(images)) images = ['']
     return (
         <div className='NewsItem_box'>
             <Link to={{ pathname: `/detail/${id}` }}>

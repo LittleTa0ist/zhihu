@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import './Detail.less'
 import { LeftOutline, MessageOutline, LikeOutline, MoreOutline, StarOutline } from 'antd-mobile-icons'
-import { Badge } from 'antd-mobile'
+import { Badge, Toast } from 'antd-mobile'
 import api from '../api'
 import SkeletionAgain from '../components/SkeletionAgain'
 import { flushSync } from 'react-dom'
-
-export default function Detail(props) {
-    const { navigate, params } = props
+import { connect } from 'react-redux'
+import action from '../store/action'
+function Detail(props) {
+    const { navigate, params, location } = props
     const [extra, setExtra] = useState(null);
     const [info, setInfo] = useState(null);
 
@@ -73,6 +74,62 @@ export default function Detail(props) {
 
         })()
     }, []);
+
+    // 以下逻辑用于登录/收藏
+    let { base: { info: userInfo }, queryUserInfoAsync, store: { list: storeList }, queryStoreListAsync, removeStoreListById } = props
+    useEffect(() => {
+        (async () => {
+            if (!userInfo) {
+                let { info } = await queryUserInfoAsync()
+                userInfo = info
+            }
+
+            // 已经登录且没有收藏列表，需要同步收藏列表
+            if (userInfo && !storeList) {
+                queryStoreListAsync()
+            }
+
+        })()
+
+    }, [])
+    //依赖于收藏列表以及路径参数计算是否收藏
+    let isStore = useMemo(() => {
+        if (!storeList) return false;
+        return storeList.some(item => {
+            return +item.news.id === +params.id
+        })
+
+    }, [storeList, params])
+    const handleStore = async () => {
+        if (!userInfo) {
+            Toast.show({
+                icon: 'fail',
+                content: '请先登录'
+            })
+            navigate(`/login?to=${location.pathname}`, { replace: true })
+            return;
+        }
+        if (isStore) {
+            let item = storeList.find(item => item.news.id === params.id)
+            if (!item) return;
+            let { code } = await api.storeRemove(item.id)
+            if (+code === 0) {
+                removeStoreListById(item.id)
+            }
+        } else {
+            try {
+                let { code, codeText } = await api.store(params.id)
+                // console.log(codeText, code);
+                if (+code === 0) {
+                    queryStoreListAsync()
+                }
+            } catch (error) {
+
+            }
+
+        }
+    }
+
     return (
         <div className="detail_box">
             {info ?
@@ -95,10 +152,17 @@ export default function Detail(props) {
                     <Badge content={extra ? extra.popularity : 0}>
                         <LikeOutline />
                     </Badge>
-                    <span><StarOutline /></span>
+                    <span className={isStore ? 'stored' : null} onClick={handleStore}><StarOutline /></span>
                     <span><MoreOutline /></span>
                 </div>
             </div>
         </div>
     )
 }
+
+export default connect(state => ({
+    base: state.base,
+    store: state.store
+}), {
+    ...action.base, ...action.store
+})(Detail)

@@ -42,7 +42,7 @@ export default function Home() {
                     let time = newsList[newsList.length - 1]['date']
                     let res = await api.queryNewsBefore(time)
                     newsList.push(res)
-                    console.log(newsList);
+                    // console.log(newsList);
                     setNewsList([...newsList])
                 } catch (_) {
 

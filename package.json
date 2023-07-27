@@ -33,6 +33,7 @@
     "jest": "^27.4.3",
     "jest-resolve": "^27.4.2",
     "jest-watch-typeahead": "^1.0.0",
+    "keepalive-react-component": "^1.0.1",
     "less-loader": "^8.1.1",
     "lib-flexible": "^0.3.2",
     "mini-css-extract-plugin": "^2.4.5",
@@ -60,6 +61,7 @@
     "semver": "^7.3.5",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.3.1",
+    "styled-components": "^6.0.5",
     "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
     "web-vitals": "^2.1.4",
@@ -143,6 +145,14 @@
   "babel": {
     "presets": [
       "react-app"
+    ],
+    "plugins": [
+      [
+        "styled-components-px2rem",
+        {
+          "rootValue": 75
+        }
+      ]
     ]
   }
 }
